@@ -15,10 +15,26 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <netinet/in.h>
+#include <pthread.h>
 
 #define BUF_SIZE 4096
 #define true 1
 #define false 0
+
+static net_downloadDataReceivedCallback downloadDataReceivedCallback;
+static net_downloadCompletedCallback downloadCompletedCallback;
+
+void net_registerDownloadCompletedCallback(net_downloadCompletedCallback func)
+{
+    if (func)
+        downloadCompletedCallback = func;
+}
+
+void net_registerdownloadDataReceivedCallback(net_downloadDataReceivedCallback func)
+{
+    if (func)
+        downloadDataReceivedCallback = func;
+}
 
 struct net_header *header_create()
 {
@@ -42,34 +58,39 @@ struct net_header *header_copy(struct net_header *h)
     return header;
 }
 
+void net_header_free(struct net_header *h)
+{
+    if (h->name)
+        free(h->name);
+    if (h->next)
+        net_header_free(h->next);
+    free(h);
+}
+
 int parse_headers(char **str, struct net_header *header)
 {
     char *pch/*, *head, *body*/;
     struct net_header *h, *temp;
     
-    pch = strtok(*str, "\n");
+    pch = strtok(*str, "\n"); /* start parsing headers */
 
     header->name = strdup(pch);
     
     h = header_create();
     header->next = h;
     
-    while ((pch = strtok(NULL, "\n")) != NULL)
+    while ((pch = strtok(NULL, "\n")) != NULL) /* go through eac header */
     {
-        if (strcmp(pch, "\r") == 0)
+        if (strcmp(pch, "\r") == 0) /* stop at \r\n\r\n */
             break;
-        
         temp = header_create();
-        
         h->name = strdup(pch);
-        
         h->next = temp;
-        
         h = temp;
     }
-    *str = strdup(strtok(NULL, ""));
+    *str = strdup(strtok(NULL, "")); /* set str as response minus headers */
 
-    h = header;
+    h = header; /* start separating name value into name and content */
     pch = strtok(h->name, ":");
     if (!pch)
         h->content = "";
@@ -87,7 +108,7 @@ int parse_headers(char **str, struct net_header *header)
     return N_SUCCESS;
 }
 
-int net_httpDownload(struct net_httpRequest *req, char **res)
+int net_httpDownloadSync(struct net_httpRequest *req, char **res)
 {
     struct addrinfo *inf;
     struct addrinfo hints;
@@ -96,7 +117,7 @@ int net_httpDownload(struct net_httpRequest *req, char **res)
     size_t bytes, total_bytes, reqlen;
     struct net_header *header;
     long int len;
-        
+    
     total_bytes = 0;
 
     path_malloc = false; /* whether or not path should be freed */
@@ -107,7 +128,7 @@ int net_httpDownload(struct net_httpRequest *req, char **res)
     if (split != NULL) /* there is a / in the URL */
     {
         host = strdup(split);
-        path = strtok(NULL, "/");
+        path = strtok(NULL, "");
         
         if (path)
         {
@@ -176,13 +197,14 @@ int net_httpDownload(struct net_httpRequest *req, char **res)
     
     while ((bytes = recv(sock, buf, BUF_SIZE, 0)) > 0) /* receive data from server */
     {
-        printf("%lu \n", bytes);
+        if (downloadDataReceivedCallback)
+            downloadDataReceivedCallback(buf, bytes);
         
         total_bytes += bytes;
         temp = strdup(retval);
         
-        /* free(retval); */
-        retval = realloc(retval, total_bytes + 1);
+        /*free(retval);*/
+        retval = malloc(total_bytes + 1);
         strcpy(retval, temp);
         strcat(retval, buf);
         
@@ -190,26 +212,43 @@ int net_httpDownload(struct net_httpRequest *req, char **res)
     }
     
     header = header_create();
-    parse_headers(&retval, header);
+    parse_headers(&retval, header); /* parse headers */
     
     do
     {
-        if (strcmp(header->name, "Content-Length") == 0)
+        if (!header->name)
+            continue;
+        if (strcmp(header->name, "Content-Length") == 0) /* get content length */
         {
-            sscanf(header->content, "%lu", &len);
-            retval[len + 1] = '\0';
+            sscanf(header->content, "%lu", &len); /* get content length value */
+            retval[len] = '\0'; /* cut off data at end of content */
             break;
         }
     } while ((header = header->next) != NULL);
     
     *res = strdup(retval); /* set passed argument to proper value */
-
+    if (downloadCompletedCallback)
+        downloadCompletedCallback(*res, strlen(*res));
+        
     if (path_malloc == true)
         free(path);
     free(retval);
     free(buf);
     freeaddrinfo(inf);
-    free(header);
     
     return N_SUCCESS;
+}
+
+void *startDl(void *req)
+{
+    char *b;
+    net_httpDownloadSync(req, &b);
+    pthread_exit(NULL);
+    return NULL;
+}
+
+void net_httpDownloadAsync(struct net_httpRequest *req)
+{
+    pthread_t thread;
+    pthread_create(&thread, NULL, startDl, req);
 }

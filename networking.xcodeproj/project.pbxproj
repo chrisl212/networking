@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		63374AFD1ADCA5B9008C6920 /* http_download.c in Sources */ = {isa = PBXBuildFile; fileRef = 63374AFB1ADCA5B9008C6920 /* http_download.c */; };
 		63374AFE1ADCA5B9008C6920 /* http_download.h in Headers */ = {isa = PBXBuildFile; fileRef = 63374AFC1ADCA5B9008C6920 /* http_download.h */; };
+		63374B1A1ADDDD92008C6920 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63374B191ADDDD92008C6920 /* libpthread.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		63374AF41ADCA4E8008C6920 /* libnetworking.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libnetworking.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		63374AFB1ADCA5B9008C6920 /* http_download.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = http_download.c; sourceTree = "<group>"; };
 		63374AFC1ADCA5B9008C6920 /* http_download.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = http_download.h; sourceTree = "<group>"; };
+		63374B191ADDDD92008C6920 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -22,6 +24,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63374B1A1ADDDD92008C6920 /* libpthread.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -31,6 +34,7 @@
 		63374AEB1ADCA4E7008C6920 = {
 			isa = PBXGroup;
 			children = (
+				63374B191ADDDD92008C6920 /* libpthread.dylib */,
 				63374AFC1ADCA5B9008C6920 /* http_download.h */,
 				63374AFB1ADCA5B9008C6920 /* http_download.c */,
 				63374AF51ADCA4E8008C6920 /* Products */,

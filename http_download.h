@@ -21,6 +21,9 @@
 
 #include <stdio.h>
 
+typedef void(*net_downloadDataReceivedCallback)(char *data, long int len);
+typedef void(*net_downloadCompletedCallback)(char *data, long int len);
+
 struct net_header
 {
     char *name;
@@ -33,6 +36,9 @@ struct net_httpRequest
     char *addr;
 };
 
-int net_httpDownload(struct net_httpRequest *req, char **buf);
+void net_registerDownloadCompletedCallback(net_downloadCompletedCallback func);
+void net_registerDownloadDataReceivedCallback(net_downloadDataReceivedCallback func);
+int net_httpDownloadSync(struct net_httpRequest *req, char **buf);
+void net_httpDownloadAsync(struct net_httpRequest *req);
 
 #endif /* defined(__networking__html_download__) */
