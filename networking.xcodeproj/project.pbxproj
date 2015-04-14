@@ -6,8 +6,15 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		63374AFD1ADCA5B9008C6920 /* http_download.c in Sources */ = {isa = PBXBuildFile; fileRef = 63374AFB1ADCA5B9008C6920 /* http_download.c */; };
+		63374AFE1ADCA5B9008C6920 /* http_download.h in Headers */ = {isa = PBXBuildFile; fileRef = 63374AFC1ADCA5B9008C6920 /* http_download.h */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		63374AF41ADCA4E8008C6920 /* libnetworking.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libnetworking.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		63374AFB1ADCA5B9008C6920 /* http_download.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = http_download.c; sourceTree = "<group>"; };
+		63374AFC1ADCA5B9008C6920 /* http_download.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = http_download.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -24,6 +31,8 @@
 		63374AEB1ADCA4E7008C6920 = {
 			isa = PBXGroup;
 			children = (
+				63374AFC1ADCA5B9008C6920 /* http_download.h */,
+				63374AFB1ADCA5B9008C6920 /* http_download.c */,
 				63374AF51ADCA4E8008C6920 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +52,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63374AFE1ADCA5B9008C6920 /* http_download.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +66,7 @@
 				63374AF01ADCA4E8008C6920 /* Sources */,
 				63374AF11ADCA4E8008C6920 /* Frameworks */,
 				63374AF21ADCA4E8008C6920 /* Headers */,
+				63374B181ADCB2E3008C6920 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -97,11 +108,28 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		63374B181ADCB2E3008C6920 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "rm /usr/local/lib/libnetworking.dylib\nln -s /Users/macuser/Library/Developer/Xcode/DerivedData/networking-hfbgmklkmbedfebsmtiharovesiv/Build/Products/Debug/libnetworking.dylib /usr/local/lib/libnetworking.dylib";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		63374AF01ADCA4E8008C6920 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63374AFD1ADCA5B9008C6920 /* http_download.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,9 +213,14 @@
 		63374AF91ADCA4E8008C6920 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = c89;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_PEDANTIC = YES;
+				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -195,9 +228,14 @@
 		63374AFA1ADCA4E8008C6920 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = c89;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_PEDANTIC = YES;
+				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
