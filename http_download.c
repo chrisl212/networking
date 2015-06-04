@@ -252,3 +252,44 @@ void net_httpDownloadAsync(struct net_httpRequest *req)
     pthread_t thread;
     pthread_create(&thread, NULL, startDl, req);
 }
+
+char *net_Error(int err)
+{
+	char *strerror;
+	switch(err)
+	{
+		case N_SUCCESS:
+		strerror = "No error";
+		break;
+		
+		case N_TIMEOUT_ERROR:
+		strerror = "Server timeout";
+		break;
+		
+		case N_INVALID_REQUEST:
+		strerror = "Invalid request";
+		break;
+
+		case N_SOCKET_ERROR:
+		strerror = "Error opening socket";
+		break;
+
+		case N_CONNECTION_ERROR:
+		strerror = "Error establishing connection";
+		break;
+
+		case N_GETADDRINFO_ERROR:
+		strerror = "getaddrinfo() failure";
+		break;
+
+		case N_REQUESTSEND_ERROR:
+		strerror = "Error sending request";
+		break;
+
+		case N_PARSE_ERROR:
+		strerror = "Error parsing response";
+		break;
+	}
+	return strerror;
+}	
+

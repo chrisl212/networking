@@ -40,5 +40,6 @@ void net_registerDownloadCompletedCallback(net_downloadCompletedCallback func);
 void net_registerDownloadDataReceivedCallback(net_downloadDataReceivedCallback func);
 int net_httpDownloadSync(struct net_httpRequest *req, char **buf);
 void net_httpDownloadAsync(struct net_httpRequest *req);
+char *net_Error(int err);
 
 #endif /* defined(__networking__html_download__) */
